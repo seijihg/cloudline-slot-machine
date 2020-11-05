@@ -7,11 +7,10 @@ import { useSelector } from "react-redux";
 const Wins = () => {
   const tally = useSelector(state => state.tally);
 return (
-  <>
-    <div>
+  
+    <div style={{margin: "1rem"}}>
       {`You've won ${tally.wins} times`}
     </div>
-  </>
 );
 }
 

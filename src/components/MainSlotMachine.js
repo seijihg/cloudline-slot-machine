@@ -6,7 +6,7 @@ import Tries from "./Tries";
 import Wins from "./Wins";
 
 const Parent = styled.div`
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   background: #dcdcf3;
   display: flex;
@@ -15,8 +15,6 @@ const Parent = styled.div`
 `;
 
 const SubDiv = styled.div`
-  height: 80%;
-  width: 40%;
   margin: 20px;
   padding: 30px;
   display: flex;
@@ -24,6 +22,7 @@ const SubDiv = styled.div`
   align-items: center;
   flex-direction: column;
   background: #e09e9e;
+  border-radius: 10px;
 `;
 
 const Header = styled.div`
@@ -35,6 +34,7 @@ const Header = styled.div`
   align-items: center;
   font-size: 26px;
   color: white;
+  border-radius: 10px;
 `;
 
 const Slots = styled.div`
@@ -45,11 +45,17 @@ const Slots = styled.div`
 const Slot = styled.div`
   height: 250px;
   width: 180px;
-  border: 2px solid black;
+  border: 2px solid white;
+  border-radius: 10px;
   background: red;
+  margin: .5rem;
+  padding: .5rem;
+  transition: all 500ms;
 `;
 
 const Spin = styled.button`
+  margin-top: 1rem;
+  border-radius: 10px;
   width: 300px;
   height: 100px;
   display: flex;
@@ -66,10 +72,13 @@ const Spin = styled.button`
 `;
 
 const Tally = styled.div`
+  margin: 1rem;
   display: flex;
   justify-content: space-around;
   width: 100%;
   font-size: 20px;
+  background: white;
+  border-radius: 10px;
 `;
 
 const MainSlotMachine = () => {
@@ -98,6 +107,7 @@ const MainSlotMachine = () => {
   // set them in our local state above, newColors.
 
   // 3. If all the colors are the same, we add to our tally wins.
+
   const spin = () => {
 
     const colours = []
@@ -133,7 +143,8 @@ const MainSlotMachine = () => {
         dispatch(resetTally())
       }
     }
-  }, [tally.wins]);
+
+  }, [tally.wins, dispatch]);
 
   // TASK
   // Within the Slots div, create 3 slots. (Create a styled component called 'Slot'
@@ -142,15 +153,15 @@ const MainSlotMachine = () => {
 
 
   return (
-    <Parent>
-      <SubDiv>
-        <Slots>
-          {newColors.map((colour) => <Slot key={Math.random()} style={{backgroundColor: `${colour}`}}>{colour}</Slot> )}
+    <Parent className="parent">
+      <SubDiv className="subdiv-slot">
+        <Slots className="slots">
+          {newColors.map((colour) => <Slot key={Math.random()}  className="slot" style={{backgroundColor: `${colour}`, transition: "all 1000ms"}}></Slot> )}
         </Slots>
 
-        <Spin onClick={() => spin()} disabled={tally.wins === 5}>Spin!</Spin>
+        <Spin onClick={() => spin()} className="spin" disabled={tally.wins === 5}>Spin!</Spin>
       </SubDiv>
-      <SubDiv>
+      <SubDiv className="subdiv-slot">
         <Header>Tally</Header>
         <Tally>
           <Tries />
