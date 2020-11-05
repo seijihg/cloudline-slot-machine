@@ -46,6 +46,7 @@ const Slot = styled.div`
   height: 250px;
   width: 180px;
   border: 2px solid black;
+  background: red;
 `;
 
 const Spin = styled.button`
@@ -97,26 +98,57 @@ const MainSlotMachine = () => {
   // set them in our local state above, newColors.
 
   // 3. If all the colors are the same, we add to our tally wins.
-  function spin() {}
+  const spin = () => {
+
+    const colours = []
+    let i = 0
+    // Randomizing the the colours.
+    while (i < 3) {
+      const colour = baseColors[Math.floor(Math.random() * baseColors.length)]
+      colours.push(colour)
+      i++
+    }
+    
+    dispatch(addToTries())
+    
+    // Set state with randomized colours.
+    setColors(colours)
+
+    // Check here if all colours are the same.
+    if (colours.every(c => c === colours[0])) {
+      dispatch(addToWins())
+    }
+  }
 
   // TASK
   // In this lifecycle function, of the tally wins reaches 5,
   // have a window.confirm message come up telling the user to 'Stop Gambling!'.
   // on 5 wins the spin button should also become disabled.
   // On selecting 'ok', the tally wins and tries are reset.
-  useEffect(() => {}, []);
+  useEffect(() => {
+
+    // Quick condition to check to reset numbers
+    if (tally.wins === 5) {
+      if (window.confirm("Stop Gambling!")) {
+        dispatch(resetTally())
+      }
+    }
+  }, [tally.wins]);
 
   // TASK
   // Within the Slots div, create 3 slots. (Create a styled component called 'Slot'
   // and render it out 3 times). Their background colors should be those stored
   // in the newColors array. (Use inline styling)
 
+
   return (
     <Parent>
       <SubDiv>
-        <Slots></Slots>
+        <Slots>
+          {newColors.map((colour) => <Slot key={Math.random()} style={{backgroundColor: `${colour}`}}>{colour}</Slot> )}
+        </Slots>
 
-        <Spin>Spin!</Spin>
+        <Spin onClick={() => spin()} disabled={tally.wins === 5}>Spin!</Spin>
       </SubDiv>
       <SubDiv>
         <Header>Tally</Header>
