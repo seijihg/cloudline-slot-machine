@@ -6,7 +6,7 @@ import Tries from "./Tries";
 import Wins from "./Wins";
 
 const Parent = styled.div`
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   background: #dcdcf3;
   display: flex;
@@ -15,8 +15,6 @@ const Parent = styled.div`
 `;
 
 const SubDiv = styled.div`
-  height: 80%;
-  width: 40%;
   margin: 20px;
   padding: 30px;
   display: flex;
@@ -24,6 +22,7 @@ const SubDiv = styled.div`
   align-items: center;
   flex-direction: column;
   background: #e09e9e;
+  border-radius: 10px;
 `;
 
 const Header = styled.div`
@@ -35,6 +34,7 @@ const Header = styled.div`
   align-items: center;
   font-size: 26px;
   color: white;
+  border-radius: 10px;
 `;
 
 const Slots = styled.div`
@@ -45,10 +45,17 @@ const Slots = styled.div`
 const Slot = styled.div`
   height: 250px;
   width: 180px;
-  border: 2px solid black;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: red;
+  margin: .5rem;
+  padding: .5rem;
+  transition: all 500ms;
 `;
 
 const Spin = styled.button`
+  margin-top: 1rem;
+  border-radius: 10px;
   width: 300px;
   height: 100px;
   display: flex;
@@ -65,10 +72,13 @@ const Spin = styled.button`
 `;
 
 const Tally = styled.div`
+  margin: 1rem;
   display: flex;
   justify-content: space-around;
   width: 100%;
   font-size: 20px;
+  background: white;
+  border-radius: 10px;
 `;
 
 const MainSlotMachine = () => {
@@ -97,28 +107,61 @@ const MainSlotMachine = () => {
   // set them in our local state above, newColors.
 
   // 3. If all the colors are the same, we add to our tally wins.
-  function spin() {}
+
+  const spin = () => {
+
+    const colours = []
+    let i = 0
+    // Randomizing the the colours.
+    while (i < 3) {
+      const colour = baseColors[Math.floor(Math.random() * baseColors.length)]
+      colours.push(colour)
+      i++
+    }
+    
+    dispatch(addToTries())
+    
+    // Set state with randomized colours.
+    setColors(colours)
+
+    // Check here if all colours are the same.
+    if (colours.every(c => c === colours[0])) {
+      dispatch(addToWins())
+    }
+  }
 
   // TASK
   // In this lifecycle function, of the tally wins reaches 5,
   // have a window.confirm message come up telling the user to 'Stop Gambling!'.
   // on 5 wins the spin button should also become disabled.
   // On selecting 'ok', the tally wins and tries are reset.
-  useEffect(() => {}, []);
+  useEffect(() => {
+
+    // Quick condition to check to reset numbers
+    if (tally.wins === 5) {
+      if (window.confirm("Stop Gambling!")) {
+        dispatch(resetTally())
+      }
+    }
+
+  }, [tally.wins, dispatch]);
 
   // TASK
   // Within the Slots div, create 3 slots. (Create a styled component called 'Slot'
   // and render it out 3 times). Their background colors should be those stored
   // in the newColors array. (Use inline styling)
 
-  return (
-    <Parent>
-      <SubDiv>
-        <Slots></Slots>
 
-        <Spin>Spin!</Spin>
+  return (
+    <Parent className="parent">
+      <SubDiv className="subdiv-slot">
+        <Slots className="slots">
+          {newColors.map((colour) => <Slot key={Math.random()}  className="slot" style={{backgroundColor: `${colour}`, transition: "all 1000ms"}}></Slot> )}
+        </Slots>
+
+        <Spin onClick={() => spin()} className="spin" disabled={tally.wins === 5}>Spin!</Spin>
       </SubDiv>
-      <SubDiv>
+      <SubDiv className="subdiv-slot">
         <Header>Tally</Header>
         <Tally>
           <Tries />
